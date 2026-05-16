@@ -22,45 +22,25 @@ O **JOVI** é uma câmera inteligente com suporte de inteligência artificial, d
 
 ```
 jovi/
-├── index.html              # Landing page principal
+├── index.html              
 ├── pages/
-│   ├── login.html          # Tela de login
-│   ├── cadastro.html       # Tela de cadastro
-│   └── dashboard.html      # Dashboard do usuário
+│   ├── login.html          
+│   ├── cadastro.html       
+│   └── dashboard.html      
 ├── css/
-│   ├── style.css           # Estilos globais
-│   ├── landing.css         # Estilos da landing page
-│   ├── auth.css            # Estilos de login/cadastro
-│   └── dashboard.css       # Estilos do dashboard
+│   ├── style.css          
+│   ├── landing.css       
+│   ├── auth.css           
+│   └── dashboard.css      
 ├── js/
-│   ├── main.js             # Utilitários globais (validação, toast, storage)
-│   ├── landing.js          # Slideshow, navbar, contadores, formulário de contato
-│   ├── auth.js             # Login, cadastro, validação de formulários
-│   └── dashboard.js        # Dashboard interativo completo
-├── README.md
+│   ├── main.js            
+│   ├── landing.js          
+│   ├── auth.js            
+│   └── dashboard.js        
 └── INTEGRANTES.TXT
 ```
 
 ---
-
-## ✅ Requisitos Atendidos
-
-### Web Development (JavaScript puro – sem frameworks)
-- [x] Manipulação dinâmica de elementos e eventos das páginas
-- [x] Validação de formulários e login (login, cadastro, contato)
-- [x] Alertas e prompts (recuperação de senha, confirmações, exclusão)
-- [x] Manipulação de imagens – slideshow com 4 slides, autoplay, dots, swipe
-- [x] Criação e gerenciamento de eventos de usuário com DOM
-- [x] Manipulação de strings e variáveis (formatação, capitalização, iniciais)
-- [x] Entregue inteiramente em JavaScript puro (sem bibliotecas externas)
-
-### Front-End
-- [x] Layout dinâmico e moderno (dark theme, animações, micro-interações)
-- [x] HTML semântico (`<nav>`, `<main>`, `<section>`, `<article>`, `<footer>`, `<aside>`, `<header>`)
-- [x] Flexbox para posicionamento e estrutura dos conteúdos
-
----
-
 ## 👥 Integrantes
 
 | Nome | RM |
