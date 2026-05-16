@@ -69,7 +69,7 @@ jovi/
 
 ## 🔗 Repositório
 
-[github.com/sua-organizacao/jovi](https://github.com/sua-organizacao/jovi)
+[[github.com/sua-organizacao/jovi](https://github.com/sua-organizacao/jovi](https://github.com/luizademario/sprint))
 
 ---
 
