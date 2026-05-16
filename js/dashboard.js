@@ -271,12 +271,12 @@ function renderizarMateriasHome() {
   }
 
   container.innerHTML = estado.materias.map(m => `
-    <div class="materia-item-small">
-      <div class="left">
+    <div class="materia-item">
+      <div class="esq">
         <span class="materia-dot" style="background:${m.cor}"></span>
         <span>${m.nome}</span>
       </div>
-      <span class="materia-count">${m.fotos} fotos</span>
+      <small>${m.fotos} fotos · ${m.audios} áudios</small>
     </div>
   `).join("");
 }
@@ -296,8 +296,8 @@ function renderizarMaterias() {
   }
 
   grid.innerHTML = estado.materias.map(m => `
-    <div class="materia-card" style="--card-color:${m.cor}" data-id="${m.id}">
-      <button class="materia-del" onclick="excluirMateria('${m.id}')" title="Remover">✕</button>
+    <div class="materia-card" style="--cor:${m.cor}" data-id="${m.id}">
+      <button type="button" class="btn-del" onclick="excluirMateria('${m.id}')" title="Remover">✕</button>
       <div class="materia-card-icon">📚</div>
       <h4>${m.nome}</h4>
       <div class="materia-card-stats">
@@ -362,15 +362,18 @@ function renderizarFotos(fotos, container) {
     return;
   }
 
-  container.innerHTML = fotos.map(f => `
-    <div class="gallery-item" onclick="verFoto('${f.id}')">
-      <div class="gallery-thumb" style="background:var(--surface2)">${f.emoji}</div>
-      <div class="gallery-info">
+  container.innerHTML = fotos.map(f => {
+    const mat = estado.materias.find(x => x.id === f.materiaId);
+    const cor = mat && mat.cor ? mat.cor : "#6c63ff";
+    return `
+    <div class="galeria-item" onclick="verFoto('${f.id}')">
+      <div class="galeria-thumb" style="--cor-mat:${cor};box-shadow:inset 0 -4px 0 0 ${cor}">${f.emoji}</div>
+      <div class="galeria-info">
         <span>${f.desc}</span>
-        <small>${f.materia} · ${formatarData(f.data)}</small>
+        <small><span class="galeria-cor" style="background:${cor}"></span>${f.materia} · ${formatarData(f.data)}</small>
       </div>
-    </div>
-  `).join("");
+    </div>`;
+  }).join("");
 }
 
 function verFoto(id) {
@@ -494,12 +497,12 @@ function realizarBusca(termo) {
   if (fotosBuscadas.length > 0) {
     html += `<p style="font-size:0.8rem;color:var(--text3);margin-bottom:6px">📸 Fotos (${fotosBuscadas.length})</p>`;
     html += fotosBuscadas.map(f => `
-      <div class="search-result-item">
-        <div class="search-result-thumb" style="background:var(--surface2)">${f.emoji}</div>
-        <div class="search-result-info">
+      <div class="resultado-item">
+        <div class="resultado-thumb">${f.emoji}</div>
+        <div>
           <strong>${f.desc}</strong>
           <span>${f.materia} · ${formatarData(f.data)}</span>
-          <span class="search-result-match">✓ Encontrado na imagem</span>
+          <span class="tag-match">Encontrado na imagem</span>
         </div>
       </div>
     `).join("");
@@ -508,12 +511,12 @@ function realizarBusca(termo) {
   if (audiosBuscados.length > 0) {
     html += `<p style="font-size:0.8rem;color:var(--text3);margin:14px 0 6px">🎙️ Transcrições (${audiosBuscados.length})</p>`;
     html += audiosBuscados.map(a => `
-      <div class="search-result-item">
-        <div class="search-result-thumb" style="background:var(--surface2)">🎙️</div>
-        <div class="search-result-info">
+      <div class="resultado-item">
+        <div class="resultado-thumb">🎙️</div>
+        <div>
           <strong>${a.titulo}</strong>
           <span>${a.materia} · ${a.duracao}</span>
-          <span class="search-result-match">✓ Encontrado na transcrição</span>
+          <span class="tag-match">Encontrado na transcrição</span>
         </div>
       </div>
     `).join("");
@@ -630,11 +633,11 @@ function adicionarAtividade(texto, icone = "📝") {
   if (!lista) return;
 
   const item = document.createElement("li");
-  item.className = "activity-item";
+  item.className = "item-atividade";
   item.style.animation = "fadeUp 0.3s ease both";
   item.innerHTML = `
-    <span class="act-icon">${icone}</span>
-    <div class="act-info">
+    <span>${icone}</span>
+    <div>
       <span>${texto}</span>
       <small>Agora mesmo</small>
     </div>
