@@ -24,21 +24,25 @@
     atualizarLinkAtivo();
   });
 
-  // Hamburger menu
-  hamburger.addEventListener("click", () => {
-    navLinks.classList.toggle("open");
-    const aberto = navLinks.classList.contains("open");
-    hamburger.setAttribute("aria-expanded", aberto);
-  });
+  // Hamburger menu (opcional — nem todas as páginas têm o botão)
+  if (hamburger && navLinks) {
+    hamburger.addEventListener("click", () => {
+      navLinks.classList.toggle("open");
+      const aberto = navLinks.classList.contains("open");
+      hamburger.setAttribute("aria-expanded", aberto);
+    });
+  }
 
   // Fecha menu ao clicar em link
-  navLinks.querySelectorAll("a").forEach(a => {
-    a.addEventListener("click", () => navLinks.classList.remove("open"));
-  });
+  if (navLinks) {
+    navLinks.querySelectorAll("a").forEach(a => {
+      a.addEventListener("click", () => navLinks.classList.remove("open"));
+    });
+  }
 
   // Highlight do link ativo via scroll
   function atualizarLinkAtivo() {
-    const sections = ["hero", "features", "slideshow", "about", "contact"];
+    const sections = ["hero", "features", "slideshow", "sobre", "contato"];
     let atual = "";
 
     sections.forEach(id => {
@@ -78,10 +82,14 @@
 
 // ============ SLIDESHOW ============
 (function initSlideshow() {
-  const slides = document.querySelectorAll(".slide");
-  const dots = document.querySelectorAll(".dot");
-  const prevBtn = document.getElementById("prevSlide");
-  const nextBtn = document.getElementById("nextSlide");
+  const root = document.querySelector(".slideshow");
+  const slides = root ? root.querySelectorAll(".slide") : [];
+  if (!slides.length) return;
+
+  const dots = root.querySelectorAll(".dot");
+  const prevBtn = document.getElementById("prevSlide") || document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextSlide") || document.getElementById("nextBtn");
+  const track = document.getElementById("slideshowTrack");
 
   let atual = 0;
   let intervalo = null;
@@ -91,13 +99,11 @@
     if (index < 0) index = slides.length - 1;
     if (index >= slides.length) index = 0;
 
-    // Remove active de todos
-    slides.forEach(s => s.classList.remove("active"));
-    dots.forEach(d => d.classList.remove("active"));
+    slides.forEach(s => s.classList.remove("ativo", "active"));
+    dots.forEach(d => d.classList.remove("ativo", "active"));
 
-    // Ativa o atual
-    slides[index].classList.add("active");
-    dots[index].classList.add("active");
+    slides[index].classList.add("ativo");
+    if (dots[index]) dots[index].classList.add("ativo");
 
     atual = index;
   }
@@ -114,40 +120,41 @@
     if (intervalo) clearInterval(intervalo);
   }
 
-  // Eventos de botões
-  prevBtn.addEventListener("click", () => { slideAnterior(); iniciarAutoplay(); });
-  nextBtn.addEventListener("click", () => { proximoSlide(); iniciarAutoplay(); });
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => { slideAnterior(); iniciarAutoplay(); });
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => { proximoSlide(); iniciarAutoplay(); });
+  }
 
-  // Dots
   dots.forEach(dot => {
     dot.addEventListener("click", () => {
-      const idx = parseInt(dot.dataset.slide, 10);
-      mostrarSlide(idx);
+      const raw = dot.dataset.i != null ? dot.dataset.i : dot.dataset.slide;
+      const idx = parseInt(raw, 10);
+      mostrarSlide(Number.isFinite(idx) ? idx : 0);
       iniciarAutoplay();
     });
   });
 
-  // Swipe touch
   let touchStartX = 0;
-  const track = document.getElementById("slideshowTrack");
+  const swipeTarget = track || root;
+  if (swipeTarget) {
+    swipeTarget.addEventListener("touchstart", e => {
+      touchStartX = e.changedTouches[0].clientX;
+    }, { passive: true });
 
-  track.addEventListener("touchstart", e => {
-    touchStartX = e.changedTouches[0].clientX;
-  }, { passive: true });
+    swipeTarget.addEventListener("touchend", e => {
+      const diff = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) proximoSlide(); else slideAnterior();
+        iniciarAutoplay();
+      }
+    }, { passive: true });
 
-  track.addEventListener("touchend", e => {
-    const diff = touchStartX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) proximoSlide(); else slideAnterior();
-      iniciarAutoplay();
-    }
-  }, { passive: true });
+    swipeTarget.addEventListener("mouseenter", pararAutoplay);
+    swipeTarget.addEventListener("mouseleave", iniciarAutoplay);
+  }
 
-  // Pause ao hover
-  track.addEventListener("mouseenter", pararAutoplay);
-  track.addEventListener("mouseleave", iniciarAutoplay);
-
-  // Inicializa
   mostrarSlide(0);
   iniciarAutoplay();
 })();
@@ -156,12 +163,13 @@
 // ============ CÂMERA MOCKUP (HERO) ============
 (function initCameraMockup() {
   const shutterBtn = document.getElementById("shutterBtn");
-  const modos = document.querySelectorAll(".cam-mode");
-  const detectMsg = document.querySelector(".subject-detect");
+  const modos = document.querySelectorAll(".cam-modos .modo");
+  const detectMsg = document.querySelector(".hero-phone .detect-label") || document.querySelector(".detect-label");
+  const visor = document.querySelector(".hero-phone .cam-visor");
 
   if (!shutterBtn) return;
 
-  const conteudos = [
+  const conteudosFoto = [
     "📚 Quadro detectado",
     "📄 Apostila detectada",
     "🖊️ Caderno detectado",
@@ -170,30 +178,60 @@
   ];
   let conteudoIdx = 0;
 
-  // Botão disparar câmera
+  const ROTULOS_MODO = {
+    Foto: conteudosFoto[0],
+    "Áudio": "🎙️ Gravando — transcrição em tempo real",
+    Texto: "📄 Texto na cena — OCR ativo"
+  };
+
+  function modoAtivoNome() {
+    const ativo = document.querySelector(".cam-modos .modo.ativo");
+    return ativo ? ativo.textContent.trim() : "Foto";
+  }
+
+  function aplicarModoVisor(nomeModo) {
+    if (!visor) return;
+    visor.classList.remove("modo-foto", "modo-audio", "modo-texto");
+    if (nomeModo === "Áudio") visor.classList.add("modo-audio");
+    else if (nomeModo === "Texto") visor.classList.add("modo-texto");
+    else visor.classList.add("modo-foto");
+
+    if (detectMsg && ROTULOS_MODO[nomeModo]) {
+      detectMsg.textContent = ROTULOS_MODO[nomeModo];
+    }
+  }
+
   shutterBtn.addEventListener("click", () => {
     shutterBtn.style.transform = "scale(0.92)";
-    setTimeout(() => shutterBtn.style.transform = "", 120);
+    setTimeout(() => { shutterBtn.style.transform = ""; }, 120);
 
-    conteudoIdx = (conteudoIdx + 1) % conteudos.length;
-    if (detectMsg) {
-      detectMsg.textContent = conteudos[conteudoIdx];
+    const nome = modoAtivoNome();
+
+    if (nome === "Foto" && detectMsg) {
+      conteudoIdx = (conteudoIdx + 1) % conteudosFoto.length;
+      detectMsg.textContent = conteudosFoto[conteudoIdx];
       detectMsg.style.animation = "none";
       requestAnimationFrame(() => {
         detectMsg.style.animation = "detectedIn 0.5s ease";
       });
+      showToast("📸 Foto capturada e classificada pela IA!", "success");
+    } else if (nome === "Áudio") {
+      showToast("🎙️ Trecho salvo e transcrito automaticamente.", "success");
+    } else if (nome === "Texto") {
+      showToast("📄 Texto reconhecido e indexado para busca.", "success");
     }
-
-    showToast("📸 Foto capturada e classificada pela IA!", "success");
   });
 
-  // Troca de modo
   modos.forEach(modo => {
     modo.addEventListener("click", () => {
-      modos.forEach(m => m.classList.remove("active"));
-      modo.classList.add("active");
+      modos.forEach(m => m.classList.remove("ativo", "active"));
+      modo.classList.add("ativo");
+      const nome = modo.textContent.trim();
+      aplicarModoVisor(nome);
     });
   });
+
+  aplicarModoVisor(modoAtivoNome());
 })();
 
 

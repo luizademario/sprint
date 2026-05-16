@@ -217,6 +217,35 @@
   font-weight: 600;
 }
 
+.cam-visor.modo-audio {
+  background: linear-gradient(135deg, #061a16, #0d2420);
+  border-color: rgba(45, 212, 191, 0.45);
+}
+
+.cam-visor.modo-audio .scan-line {
+  opacity: 0.25;
+}
+
+.cam-visor.modo-audio .c { opacity: 0.35; }
+
+.cam-visor.modo-audio .detect-label {
+  background: rgba(45, 212, 191, 0.95);
+}
+
+.cam-visor.modo-texto {
+  background: linear-gradient(135deg, #1a1410, #221a14);
+  border-color: rgba(247, 201, 72, 0.45);
+}
+
+.cam-visor.modo-texto .scan-line {
+  background: linear-gradient(90deg, transparent, #f7c948, transparent);
+}
+
+.cam-visor.modo-texto .detect-label {
+  background: rgba(247, 201, 72, 0.95);
+  color: #1a1208;
+}
+
 .cam-modos {
   display: flex;
   justify-content: center;
