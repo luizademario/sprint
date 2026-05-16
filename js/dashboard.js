@@ -337,7 +337,13 @@ function renderizarGaleria() {
   if (!grid) return;
 
   if (filtros) {
-    const nomesMaterias = ["Todas", ...new Set(estado.fotos.map(f => f.materia))];
+    const materiasUnicas = [...new Set(
+      estado.fotos
+        .map(f => (f.materia != null ? String(f.materia) : "").trim())
+        .filter(n => n.length > 0)
+    )].sort((a, b) => a.localeCompare(b, "pt"));
+
+    const nomesMaterias = ["Todas", ...materiasUnicas];
     filtros.innerHTML = nomesMaterias.map((nome, i) => `
     <button type="button" class="btn-filtro${i === 0 ? " ativo" : ""}" data-filter="${nome}">${nome}</button>
   `).join("");
