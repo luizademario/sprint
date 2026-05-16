@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JOVI – Entrar</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
+</head>
+<body class="auth-body">
+
+  <div class="auth-container">
+    <div class="auth-esquerda">
+      <a href="../index.html" class="logo">
+        <span class="brand-dot"></span>
+        <span class="brand-name">JOVI</span>
+      </a>
+      <h2>Bem-vindo de volta!</h2>
+      <p>Continue organizando seu aprendizado com inteligência artificial.</p>
+      <div class="info-cards">
+        <div class="info-card">
+          <span>🎯</span>
+          <div>
+            <strong>Modo Estudante ativo</strong>
+            <small>3 matérias organizadas hoje</small>
+          </div>
+        </div>
+        <div class="info-card">
+          <span>🎙️</span>
+          <div>
+            <strong>Transcrição concluída</strong>
+            <small>Física – 45 min de aula</small>
+          </div>
+        </div>
+        <div class="info-card">
+          <span>🔍</span>
+          <div>
+            <strong>Busca disponível</strong>
+            <small>127 fotos indexadas</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-direita">
+      <div class="auth-box">
+        <div class="auth-topo">
+          <h1>Entrar na conta</h1>
+          <p>Não tem conta? <a href="cadastro.html">Cadastre-se grátis</a></p>
+        </div>
+
+        <form id="formLogin" novalidate>
+          <div class="campo">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" placeholder="seu@email.com" />
+            <span class="erro" id="errEmail"></span>
+          </div>
+          <div class="campo">
+            <label for="senha">
+              Senha
+              <a href="#" id="linkEsqueci">Esqueceu?</a>
+            </label>
+            <div class="input-icone">
+              <input type="password" id="senha" placeholder="Sua senha" />
+              <button type="button" id="verSenha">👁</button>
+            </div>
+            <span class="erro" id="errSenha"></span>
+          </div>
+          <button type="submit" class="btn-primary btn-full btn-lg">Entrar</button>
+        </form>
+
+        <div class="divisor"><span>ou</span></div>
+
+        <button class="btn-social" id="btnDemo">🚀 Entrar com conta demo</button>
+
+        <p class="nota">Ao entrar, você concorda com os <a href="#">Termos de Uso</a>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="../js/main.js"></script>
+  <script src="../js/auth.js"></script>
+</body>
+</html>

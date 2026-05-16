@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JOVI – Dashboard</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+</head>
+<body class="dash-body">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-topo">
+      <div class="logo">
+        <span class="brand-dot"></span>
+        <span class="brand-name">JOVI</span>
+      </div>
+      <nav>
+        <a href="#" class="nav-item ativo" data-sec="inicio">🏠 <span>Início</span></a>
+        <a href="#" class="nav-item" data-sec="materias">📚 <span>Matérias</span></a>
+        <a href="#" class="nav-item" data-sec="galeria">🖼️ <span>Galeria</span></a>
+        <a href="#" class="nav-item" data-sec="busca">🔍 <span>Busca</span></a>
+      </nav>
+    </div>
+    <div class="sidebar-base">
+      <a href="../index.html" class="nav-item sair" id="btnSair">🚪 <span>Sair</span></a>
+    </div>
+  </aside>
+
+  <main class="dash-main">
+    <header class="topbar">
+      <button class="btn-menu" id="btnMenu">☰</button>
+      <input type="text" id="buscaRapida" placeholder="Buscar conteúdo..." class="topbar-busca" />
+      <div class="topbar-direita">
+        <button class="btn-notif" id="btnNotif">🔔 <span class="badge" id="badge">2</span></button>
+        <div class="avatar" id="avatarUser">US</div>
+      </div>
+    </header>
+
+    <div class="dash-conteudo">
+
+      <section class="secao ativa" id="sec-inicio">
+        <div class="boas-vindas">
+          <div>
+            <h1 id="msgBoasVindas">Olá! 👋</h1>
+            <p>Bem-vindo ao seu painel JOVI.</p>
+          </div>
+          <button class="btn-primary" id="btnCapturar">📸 Capturar agora</button>
+        </div>
+        <div class="stats">
+          <div class="stat-card">
+            <span class="stat-icon">📸</span>
+            <div>
+              <strong id="totalFotos">0</strong>
+              <small>Fotos capturadas</small>
+            </div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">📚</span>
+            <div>
+              <strong id="totalMaterias">0</strong>
+              <small>Matérias ativas</small>
+            </div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">🔍</span>
+            <div>
+              <strong id="totalBuscas">0</strong>
+              <small>Buscas realizadas</small>
+            </div>
+          </div>
+        </div>
+        <div class="dash-grid">
+          <div class="painel">
+            <div class="painel-topo">
+              <h3>Atividade recente</h3>
+            </div>
+            <ul class="lista-atividade" id="listaAtividade"></ul>
+          </div>
+          <div class="painel">
+            <div class="painel-topo">
+              <h3>Minhas matérias</h3>
+              <button class="btn-sm" id="btnAddMateria">+ Adicionar</button>
+            </div>
+            <div id="materiasHome"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="secao" id="sec-materias">
+        <div class="secao-topo">
+          <h2>Matérias</h2>
+          <button class="btn-primary" id="btnAddMateriaMain">+ Nova matéria</button>
+        </div>
+        <div class="materias-grid" id="materiasGrid"></div>
+      </section>
+
+      <section class="secao" id="sec-galeria">
+        <div class="secao-topo">
+          <h2>Galeria</h2>
+          <div id="filtros"></div>
+        </div>
+        <div class="galeria-grid" id="galeriaGrid"></div>
+      </section>
+
+      <section class="secao" id="sec-busca">
+        <div class="secao-topo"><h2>Busca inteligente</h2></div>
+        <div class="busca-hero">
+          <div class="busca-box">
+            <span>🔍</span>
+            <input type="text" id="campoBusca" placeholder="Ex: teorema de pitágoras..." />
+            <button class="btn-primary" id="btnBuscar">Buscar</button>
+          </div>
+          <small>A IA busca dentro do conteúdo das suas fotos e transcrições</small>
+        </div>
+        <div id="resultadosBusca"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="modalCaptura" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h3>📸 Nova captura</h3>
+        <button class="fechar-modal" id="fecharCaptura">✕</button>
+      </div>
+      <div class="modal-corpo">
+        <div class="campo">
+          <label>Matéria</label>
+          <select id="capMateria"></select>
+        </div>
+        <div class="campo">
+          <label>Descrição</label>
+          <input type="text" id="capDesc" placeholder="Ex: Aula sobre derivadas" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" id="cancelarCaptura">Cancelar</button>
+        <button class="btn-primary" id="confirmarCaptura">📸 Capturar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modalMateria" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h3>📚 Nova matéria</h3>
+        <button class="fechar-modal" id="fecharMateria">✕</button>
+      </div>
+      <div class="modal-corpo">
+        <div class="campo">
+          <label>Nome da matéria</label>
+          <input type="text" id="nomeMateria" placeholder="Ex: Biologia" />
+        </div>
+        <div class="campo">
+          <label>Cor</label>
+          <div class="cores" id="cores">
+            <span class="cor selecionada" data-cor="#6c63ff" style="background:#6c63ff"></span>
+            <span class="cor" data-cor="#00d2ff" style="background:#00d2ff"></span>
+            <span class="cor" data-cor="#f7c948" style="background:#f7c948"></span>
+            <span class="cor" data-cor="#ff6b6b" style="background:#ff6b6b"></span>
+            <span class="cor" data-cor="#2dd4bf" style="background:#2dd4bf"></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" id="cancelarMateria">Cancelar</button>
+        <button class="btn-primary" id="confirmarMateria">Adicionar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="../js/main.js"></script>
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

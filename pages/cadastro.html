@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JOVI – Criar conta</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
+</head>
+<body class="auth-body">
+
+  <div class="auth-container">
+    <div class="auth-esquerda">
+      <a href="../index.html" class="logo">
+        <span class="brand-dot"></span>
+        <span class="brand-name">JOVI</span>
+      </a>
+      <h2>Comece a estudar com IA</h2>
+      <p>Crie sua conta e transforme a forma como você organiza o aprendizado.</p>
+      <div class="passos">
+        <div class="passo">
+          <span class="passo-num">1</span>
+          <div>
+            <strong>Crie sua conta</strong>
+            <p>Rápido, gratuito e sem cartão</p>
+          </div>
+        </div>
+        <div class="passo">
+          <span class="passo-num">2</span>
+          <div>
+            <strong>Configure as matérias</strong>
+            <p>Diga ao JOVI quais disciplinas você cursa</p>
+          </div>
+        </div>
+        <div class="passo">
+          <span class="passo-num">3</span>
+          <div>
+            <strong>Comece a capturar</strong>
+            <p>A IA faz o resto automaticamente</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-direita">
+      <div class="auth-box">
+        <div class="auth-topo">
+          <h1>Criar conta</h1>
+          <p>Já tem conta? <a href="login.html">Entrar</a></p>
+        </div>
+
+        <form id="formCadastro" novalidate>
+          <div class="form-linha">
+            <div class="campo">
+              <label for="nome">Nome</label>
+              <input type="text" id="nome" placeholder="Seu nome" />
+              <span class="erro" id="errNome"></span>
+            </div>
+            <div class="campo">
+              <label for="sobrenome">Sobrenome</label>
+              <input type="text" id="sobrenome" placeholder="Seu sobrenome" />
+              <span class="erro" id="errSobrenome"></span>
+            </div>
+          </div>
+          <div class="campo">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" placeholder="seu@email.com" />
+            <span class="erro" id="errEmail"></span>
+          </div>
+          <div class="campo">
+            <label for="senha">Senha</label>
+            <div class="input-icone">
+              <input type="password" id="senha" placeholder="Mínimo 8 caracteres" />
+              <button type="button" id="verSenha">👁</button>
+            </div>
+            <div class="forca-senha">
+              <div class="forca-barra"><span id="forcaFill"></span></div>
+              <span id="forcaLabel">Força da senha</span>
+            </div>
+            <span class="erro" id="errSenha"></span>
+          </div>
+          <div class="campo">
+            <label for="confirma">Confirmar senha</label>
+            <input type="password" id="confirma" placeholder="Repita a senha" />
+            <span class="erro" id="errConfirma"></span>
+          </div>
+          <div class="checkbox-campo">
+            <label>
+              <input type="checkbox" id="termos" />
+              Concordo com os <a href="#">Termos de Uso</a>
+            </label>
+            <span class="erro" id="errTermos"></span>
+          </div>
+          <button type="submit" class="btn-primary btn-full btn-lg">Criar minha conta</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="../js/main.js"></script>
+  <script src="../js/auth.js"></script>
+</body>
+</html>
