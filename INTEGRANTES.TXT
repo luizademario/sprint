@@ -1,0 +1,19 @@
+INTEGRANTES DO GRUPO – JOVI
+Challenge JOVI Smartphone – FIAP
+Sprint 2 – Web Development & Front-End
+========================================
+
+Nome: Gustavo Noleto
+RM: RM000001
+
+Nome: Luiz Ademario
+RM: RM000002
+
+Nome: Lucas Gaspar
+RM: RM000003
+
+Nome: Bruno Marcelo
+RM: RM000004
+
+Nome: Victor Godoy
+RM: RM000005
