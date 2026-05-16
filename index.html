@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JOVI – Câmera Inteligente</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/landing.css" />
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-brand">
+      <span class="brand-dot"></span>
+      <span class="brand-name">JOVI</span>
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#hero" class="nav-link">Início</a></li>
+      <li><a href="#features" class="nav-link">Funcionalidades</a></li>
+      <li><a href="#slideshow" class="nav-link">Galeria</a></li>
+      <li><a href="#sobre" class="nav-link">Sobre</a></li>
+      <li><a href="#contato" class="nav-link">Contato</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="pages/login.html" class="btn-outline">Entrar</a>
+      <a href="pages/cadastro.html" class="btn-primary">Começar grátis</a>
+    </div>
+  </nav>
+
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <div class="orb orb1"></div>
+      <div class="orb orb2"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        IA para estudantes
+      </div>
+      <h1>Capture, organize<br><span class="destaque">aprenda mais rápido</span></h1>
+      <p>A câmera inteligente que classifica suas anotações automaticamente, transcreve áudios e busca qualquer conteúdo por palavra-chave.</p>
+      <div class="hero-btns">
+        <a href="pages/cadastro.html" class="btn-primary btn-lg">Começar agora</a>
+        <a href="#features" class="btn-ghost btn-lg">Ver funcionalidades →</a>
+      </div>
+    </div>
+    <div class="hero-phone">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="cam-header">
+            <span>MODO ESTUDANTE</span>
+            <span class="ia-badge">IA ON</span>
+          </div>
+          <div class="cam-visor">
+            <div class="scan-line"></div>
+            <div class="c tl"></div>
+            <div class="c tr"></div>
+            <div class="c bl"></div>
+            <div class="c br"></div>
+            <div class="detect-label">📚 Quadro detectado</div>
+          </div>
+          <div class="cam-modos">
+            <span class="modo ativo">Foto</span>
+            <span class="modo">Áudio</span>
+            <span class="modo">Texto</span>
+          </div>
+          <div class="cam-footer">
+            <div class="thumb"></div>
+            <button class="shutter" id="shutterBtn"><span></span></button>
+            <div class="flip">↻</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <div class="section-topo">
+      <span class="tag">Funcionalidades</span>
+      <h2>Tudo que você precisa para estudar melhor</h2>
+      <p>Tecnologia de IA integrada à captura de conteúdo em sala de aula</p>
+    </div>
+    <div class="features-grid">
+      <article class="card-feature">
+        <div class="card-icon">🎯</div>
+        <h3>Modo Estudante</h3>
+        <p>Armazenamento automático por matéria. A IA classifica cada foto e organiza na pasta certa.</p>
+        <span class="tag-small">Auto-organização</span>
+      </article>
+      <article class="card-feature">
+        <div class="card-icon">🎙️</div>
+        <h3>Transcrição de Áudio</h3>
+        <p>Grave a aula e receba a transcrição automática em texto, pesquisável por palavra-chave.</p>
+        <span class="tag-small">IA em tempo real</span>
+      </article>
+      <article class="card-feature">
+        <div class="card-icon">🔍</div>
+        <h3>Busca Inteligente</h3>
+        <p>Encontre qualquer anotação pelo conteúdo da imagem. A IA lê o texto nas suas fotos.</p>
+        <span class="tag-small">OCR avançado</span>
+      </article>
+      <article class="card-feature">
+        <div class="card-icon">🌐</div>
+        <h3>Tradução Instantânea</h3>
+        <p>Texto em outro idioma na foto? Tradução automática com um toque.</p>
+        <span class="tag-small">Multi-idioma</span>
+      </article>
+      <article class="card-feature">
+        <div class="card-icon">🔗</div>
+        <h3>Integração Foto + Áudio</h3>
+        <p>Foto e áudio capturados juntos ficam vinculados automaticamente para revisão completa.</p>
+        <span class="tag-small">Sincronização</span>
+      </article>
+      <article class="card-feature">
+        <div class="card-icon">📌</div>
+        <h3>Marcadores</h3>
+        <p>Marque pontos importantes durante a aula para revisão rápida depois.</p>
+        <span class="tag-small">Destaques</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="slideshow-section" id="slideshow">
+    <div class="section-topo">
+      <span class="tag">Galeria</span>
+      <h2>Veja o JOVI em ação</h2>
+    </div>
+    <div class="slideshow">
+      <div class="slide ativo">
+        <div class="slide-visual v1">
+          <div class="slide-phone">
+            <div class="sp-header">📸 Câmera ativa</div>
+            <div class="sp-body">
+              <div class="sp-scan"></div>
+              <span>Reconhecendo conteúdo...</span>
+            </div>
+          </div>
+        </div>
+        <div class="slide-texto">
+          <span class="slide-num">01</span>
+          <h3>Capture com inteligência</h3>
+          <p>A câmera do JOVI reconhece automaticamente quando você está fotografando um quadro ou apostila.</p>
+        </div>
+      </div>
+      <div class="slide">
+        <div class="slide-visual v2">
+          <div class="slide-phone">
+            <div class="sp-header">📂 Organização</div>
+            <div class="sp-body pastas">
+              <div class="pasta">📗 Matemática <span>12 fotos</span></div>
+              <div class="pasta">📘 Física <span>8 fotos</span></div>
+              <div class="pasta">📙 História <span>5 fotos</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-texto">
+          <span class="slide-num">02</span>
+          <h3>Organização automática</h3>
+          <p>Cada foto vai direto para a pasta da matéria correta. Sem pastas manuais, sem bagunça.</p>
+        </div>
+      </div>
+      <div class="slide">
+        <div class="slide-visual v3">
+          <div class="slide-phone">
+            <div class="sp-header">🔍 Busca</div>
+            <div class="sp-body">
+              <div class="busca-bar">teorema de pitágoras 🔍</div>
+              <div class="busca-result">
+                <div class="br-thumb"></div>
+                <div>
+                  <span>Matemática – 12/05</span>
+                  <span class="match">Encontrado na imagem</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-texto">
+          <span class="slide-num">03</span>
+          <h3>Busca por conteúdo</h3>
+          <p>Procure qualquer termo e o JOVI encontra todas as fotos onde esse texto aparece.</p>
+        </div>
+      </div>
+      <div class="slide">
+        <div class="slide-visual v4">
+          <div class="slide-phone">
+            <div class="sp-header">🎙️ Áudio</div>
+            <div class="sp-body audio">
+              <div class="ondas">
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+              </div>
+              <div class="transcricao">"...a derivada de x² é igual a 2x..."</div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-texto">
+          <span class="slide-num">04</span>
+          <h3>Transcrição em tempo real</h3>
+          <p>Grave a explicação do professor e receba a transcrição completa. Nunca mais perca um detalhe.</p>
+        </div>
+      </div>
+      <div class="slide-controles">
+        <button id="prevBtn">&#8592;</button>
+        <div class="dots" id="dots">
+          <span class="dot ativo" data-i="0"></span>
+          <span class="dot" data-i="1"></span>
+          <span class="dot" data-i="2"></span>
+          <span class="dot" data-i="3"></span>
+        </div>
+        <button id="nextBtn">&#8594;</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="sobre" id="sobre">
+    <div class="sobre-texto">
+      <span class="tag">Sobre o projeto</span>
+      <h2>Nascido da necessidade real dos estudantes</h2>
+      <p>O JOVI surgiu a partir de um mapeamento das dores dos estudantes: fotos espalhadas, áudios perdidos, matérias misturadas. Nossa proposta é simples — deixar a tecnologia trabalhar para você, enquanto você foca no que importa: aprender.</p>
+      <ul class="sobre-lista">
+        <li>✦ Interface limpa e focada</li>
+        <li>✦ IA embarcada no dispositivo</li>
+        <li>✦ Baixo consumo de bateria</li>
+        <li>✦ Funciona sem internet</li>
+      </ul>
+    </div>
+    <div class="sobre-time">
+      <h3>Time de desenvolvimento</h3>
+      <div class="time-grid">
+        <div class="time-card"><div class="avatar">GN</div><span>Gustavo Noleto</span></div>
+        <div class="time-card"><div class="avatar">LA</div><span>Luiz Ademario</span></div>
+        <div class="time-card"><div class="avatar">LG</div><span>Lucas Gaspar</span></div>
+        <div class="time-card"><div class="avatar">BM</div><span>Bruno Marcelo</span></div>
+        <div class="time-card"><div class="avatar">VG</div><span>Victor Godoy</span></div>
+      </div>
+      <p class="escola">FIAP — Challenge JOVI Smartphone</p>
+    </div>
+  </section>
+
+  <section class="contato" id="contato">
+    <div class="section-topo">
+      <span class="tag">Contato</span>
+      <h2>Fale com a gente</h2>
+    </div>
+    <form id="formContato" class="form-contato" novalidate>
+      <div class="form-linha">
+        <div class="campo">
+          <label for="cNome">Nome</label>
+          <input type="text" id="cNome" placeholder="Seu nome" />
+          <span class="erro" id="errNome"></span>
+        </div>
+        <div class="campo">
+          <label for="cEmail">E-mail</label>
+          <input type="email" id="cEmail" placeholder="seu@email.com" />
+          <span class="erro" id="errEmail"></span>
+        </div>
+      </div>
+      <div class="campo">
+        <label for="cMsg">Mensagem</label>
+        <textarea id="cMsg" rows="5" placeholder="Escreva sua mensagem..."></textarea>
+        <span class="erro" id="errMsg"></span>
+      </div>
+      <button type="submit" class="btn-primary btn-full">Enviar mensagem</button>
+    </form>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-topo">
+      <div class="footer-brand">
+        <span class="brand-dot"></span>
+        <span class="brand-name">JOVI</span>
+        <p>A câmera inteligente feita para quem estuda.</p>
+      </div>
+      <div class="footer-links">
+        <div class="col">
+          <h4>Produto</h4>
+          <a href="#features">Funcionalidades</a>
+          <a href="#slideshow">Galeria</a>
+          <a href="pages/login.html">Entrar</a>
+        </div>
+        <div class="col">
+          <h4>Projeto</h4>
+          <a href="#sobre">Sobre</a>
+          <a href="#contato">Contato</a>
+          <a href="pages/cadastro.html">Cadastro</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-base">
+      <p>&copy; 2026 JOVI – Challenge JOVI Smartphone · FIAP</p>
+      <p>Gustavo Noleto · Luiz Ademario · Lucas Gaspar · Bruno Marcelo · Victor Godoy</p>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/main.js"></script>
+  <script src="js/landing.js"></script>
+</body>
+</html>
