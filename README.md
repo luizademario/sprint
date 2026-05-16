@@ -45,7 +45,7 @@ jovi/
 
 | Nome | RM |
 |------|----|
-| Gustavo Noleto | RM568616 |
+| Gustavo Noleto | RM569592 |
 | Luiz Ademario | RM571182 |
 | Lucas Gaspar | RM568616 |
 | Bruno Marcelo | RM569785 |
