@@ -58,6 +58,13 @@ function remover(chave) {
   try { localStorage.removeItem("jovi_" + chave); } catch(e) {}
 }
 
+/** API usada por auth.js e dashboard.js (prefixo jovi_ no localStorage) */
+var JoviStorage = {
+  get: function(chave) { return carregar(chave); },
+  set: function(chave, valor) { salvar(chave, valor); },
+  remove: function(chave) { remover(chave); }
+};
+
 function abrirModal(id) {
   var el = document.getElementById(id);
   if (el) el.hidden = false;
@@ -81,3 +88,19 @@ document.addEventListener("keydown", function(e) {
     });
   }
 });
+
+/** Anima número inteiro em um elemento (dashboard, landing) */
+function animarContador(el, alvo, duracao) {
+  if (!el) return;
+  var inicio = parseInt(String(el.textContent).replace(/\D/g, ""), 10);
+  if (isNaN(inicio)) inicio = 0;
+  var fim = alvo;
+  var ms = duracao || 600;
+  var t0 = Date.now();
+  function tick() {
+    var p = Math.min(1, (Date.now() - t0) / ms);
+    el.textContent = Math.round(inicio + (fim - inicio) * p);
+    if (p < 1) requestAnimationFrame(tick);
+  }
+  tick();
+}

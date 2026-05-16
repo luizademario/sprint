@@ -1,187 +1,180 @@
 /* ============================================
    JOVI – auth.js
-   Requisitos Web Dev cobertos:
-   ✔ Validação de formulários e login
-   ✔ Alertas e prompts
-   ✔ Manipulação de strings e variáveis
-   ✔ Eventos de usuário no DOM
+   Login / cadastro alinhados ao HTML (formLogin, formCadastro).
+   Credenciais demo (README): demo@jovi.com / demo1234
    ============================================ */
 
 "use strict";
 
-// ============ TOGGLE SENHA ============
+function gerarIniciais(nomeCompleto) {
+  var partes = nomeCompleto.trim().split(/\s+/);
+  var primeira = partes[0] ? partes[0].charAt(0).toUpperCase() : "";
+  var ultima = partes.length > 1 ? partes[partes.length - 1].charAt(0).toUpperCase() : "";
+  return primeira + ultima || primeira || "U";
+}
+
 function initToggleSenha(btnId, inputId) {
-  const btn = document.getElementById(btnId);
-  const input = document.getElementById(inputId);
+  var btn = document.getElementById(btnId);
+  var input = document.getElementById(inputId);
   if (!btn || !input) return;
 
-  btn.addEventListener("click", () => {
-    const visivel = input.type === "text";
+  btn.addEventListener("click", function() {
+    var visivel = input.type === "text";
     input.type = visivel ? "password" : "text";
     btn.textContent = visivel ? "👁" : "🙈";
   });
 }
 
-initToggleSenha("togglePass", "loginPassword");
-initToggleSenha("toggleCadPass", "cadSenha");
+initToggleSenha("verSenha", "senha");
 
+/** Mesmas credenciais documentadas no README */
+var USUARIOS_DEMO = [
+  { email: "demo@jovi.com", senha: "demo1234", nome: "Usuário Demo" },
+  { email: "gustavo@jovi.com", senha: "Jovi@2026", nome: "Gustavo Noleto" }
+];
 
-// ============ FORMULÁRIO DE LOGIN ============
+function gravarSessao(usuario) {
+  JoviStorage.set("sessao", {
+    nome: usuario.nome,
+    email: usuario.email.toLowerCase(),
+    iniciais: gerarIniciais(usuario.nome),
+    logado: true,
+    loginEm: new Date().toISOString()
+  });
+}
+
+function irParaDashboard(usuario) {
+  var primeiro = usuario.nome.split(" ")[0];
+  showToast("Bem-vindo, " + capitalizar(primeiro) + "!", "success");
+  setTimeout(function() {
+    window.location.href = "dashboard.html";
+  }, 500);
+}
+
+function autenticar(email, senha) {
+  var cadastrados = JoviStorage.get("usuarios") || [];
+  var norm = email.trim().toLowerCase();
+  var todos = USUARIOS_DEMO.concat(cadastrados);
+  for (var i = 0; i < todos.length; i++) {
+    if (todos[i].email.toLowerCase() === norm && todos[i].senha === senha) {
+      return todos[i];
+    }
+  }
+  return null;
+}
+
+// ============ LOGIN (pages/login.html) ============
 (function initLogin() {
-  const form = document.getElementById("loginForm");
+  var form = document.getElementById("formLogin");
   if (!form) return;
 
-  const emailInput    = document.getElementById("loginEmail");
-  const senhaInput    = document.getElementById("loginPassword");
-  const demoBtn       = document.getElementById("demoLogin");
-  const forgotLink    = document.getElementById("forgotLink");
+  var emailInput = document.getElementById("email");
+  var senhaInput = document.getElementById("senha");
+  var btnDemo = document.getElementById("btnDemo");
+  var linkEsqueci = document.getElementById("linkEsqueci");
 
-  // Usuários demo cadastrados
-  const usuariosDemo = [
-    { email: "gustavo@jovi.com", senha: "Jovi@2026", nome: "Gustavo Noleto" },
-    { email: "demo@jovi.com",    senha: "demo1234",  nome: "Usuário Demo" }
-  ];
+  function limparCamposErro() {
+    limparErro("errEmail");
+    limparErro("errSenha");
+    if (emailInput) emailInput.classList.remove("erro-campo");
+    if (senhaInput) senhaInput.classList.remove("erro-campo");
+  }
 
   function validarLogin() {
-    let valido = true;
+    var ok = true;
+    limparCamposErro();
 
-    limparErro(emailInput, "errorLoginEmail");
-    limparErro(senhaInput, "errorLoginPass");
+    if (!emailInput || !senhaInput) return false;
 
-    if (Validar.vazio(emailInput.value)) {
-      marcarErro(emailInput, "Informe o e-mail.", "errorLoginEmail");
-      valido = false;
-    } else if (!Validar.email(emailInput.value)) {
-      marcarErro(emailInput, "E-mail inválido.", "errorLoginEmail");
-      valido = false;
+    if (vazio(emailInput.value)) {
+      marcarErro("errEmail", "Informe o e-mail.");
+      emailInput.classList.add("erro-campo");
+      ok = false;
+    } else if (!emailValido(emailInput.value.trim())) {
+      marcarErro("errEmail", "E-mail inválido.");
+      emailInput.classList.add("erro-campo");
+      ok = false;
     }
 
-    if (Validar.vazio(senhaInput.value)) {
-      marcarErro(senhaInput, "Informe a senha.", "errorLoginPass");
-      valido = false;
+    if (vazio(senhaInput.value)) {
+      marcarErro("errSenha", "Informe a senha.");
+      senhaInput.classList.add("erro-campo");
+      ok = false;
     }
 
-    return valido;
+    return ok;
   }
 
-  function autenticar(email, senha) {
-    // Verifica usuários cadastrados na sessão
-    const cadastrados = JoviStorage.get("usuarios") || [];
-    const todosCombinados = [...usuariosDemo, ...cadastrados];
-
-    const usuario = todosCombinados.find(
-      u => u.email.toLowerCase() === email.toLowerCase() && u.senha === senha
-    );
-    return usuario || null;
+  function fazerLoginComUsuario(usuario) {
+    gravarSessao(usuario);
+    irParaDashboard(usuario);
   }
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", function(e) {
     e.preventDefault();
-
     if (!validarLogin()) return;
 
-    const email = emailInput.value.trim();
-    const senha = senhaInput.value;
-    const lembrar = document.getElementById("rememberMe")?.checked;
-
-    const usuario = autenticar(email, senha);
-
+    var usuario = autenticar(emailInput.value, senhaInput.value);
     if (!usuario) {
-      marcarErro(emailInput, "", "errorLoginEmail");
-      marcarErro(senhaInput, "E-mail ou senha incorretos.", "errorLoginPass");
-      showToast("❌ Credenciais inválidas. Tente: demo@jovi.com / demo1234", "error", 5000);
+      marcarErro("errSenha", "E-mail ou senha incorretos.");
+      emailInput.classList.add("erro-campo");
+      senhaInput.classList.add("erro-campo");
+      showToast("Use demo@jovi.com e a senha demo1234 (veja o README).", "error");
       return;
     }
+    fazerLoginComUsuario(usuario);
+  });
 
-    // Salva sessão
-    JoviStorage.set("sessao", {
-      nome: usuario.nome,
-      email: usuario.email,
-      iniciais: gerarIniciais(usuario.nome),
-      logado: true,
-      loginEm: new Date().toISOString()
+  if (btnDemo) {
+    btnDemo.addEventListener("click", function() {
+      var demo = USUARIOS_DEMO[0];
+      if (emailInput) emailInput.value = demo.email;
+      if (senhaInput) senhaInput.value = demo.senha;
+      fazerLoginComUsuario(demo);
     });
-
-    if (lembrar) {
-      JoviStorage.set("lembrar", { email: usuario.email });
-    }
-
-    showToast(`👋 Bem-vindo de volta, ${usuario.nome.split(" ")[0]}!`, "success");
-    setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
-  });
-
-  // Login demo
-  demoBtn?.addEventListener("click", () => {
-    emailInput.value = "demo@jovi.com";
-    senhaInput.value = "demo1234";
-    showToast("✅ Dados preenchidos! Clique em Entrar.", "success");
-  });
-
-  // Esqueceu a senha - usa prompt
-  forgotLink?.addEventListener("click", (e) => {
-    e.preventDefault();
-    const email = prompt("Informe seu e-mail cadastrado para recuperar a senha:");
-
-    if (email === null) return; // cancelou
-
-    if (!email || !Validar.email(email.trim())) {
-      alert("⚠️ E-mail inválido. Tente novamente.");
-      return;
-    }
-
-    alert(`✅ Um link de recuperação foi enviado para:\n${email.trim()}\n\nVerifique sua caixa de entrada.`);
-    showToast("📧 Link de recuperação enviado!", "success");
-  });
-
-  // Preenche lembrar email
-  const lembrado = JoviStorage.get("lembrar");
-  if (lembrado?.email && emailInput) {
-    emailInput.value = lembrado.email;
-    const rem = document.getElementById("rememberMe");
-    if (rem) rem.checked = true;
   }
 
-  // Limpa erros ao digitar
-  [emailInput, senhaInput].forEach(el => {
-    el?.addEventListener("input", () => el.classList.remove("error"));
-  });
+  if (linkEsqueci) {
+    linkEsqueci.addEventListener("click", function(e) {
+      e.preventDefault();
+      var email = window.prompt("Informe seu e-mail cadastrado para recuperar a senha:");
+      if (email === null) return;
+      if (vazio(email) || !emailValido(email.trim())) {
+        window.alert("E-mail inválido. Tente novamente.");
+        return;
+      }
+      window.alert("Simulação: um link seria enviado para:\n" + email.trim());
+      showToast("Verifique sua caixa de entrada.", "success");
+    });
+  }
+
+  if (emailInput) {
+    emailInput.addEventListener("input", function() {
+      limparErro("errEmail");
+      emailInput.classList.remove("erro-campo");
+    });
+  }
+  if (senhaInput) {
+    senhaInput.addEventListener("input", function() {
+      limparErro("errSenha");
+      senhaInput.classList.remove("erro-campo");
+    });
+  }
 })();
 
 
-// ============ FORMULÁRIO DE CADASTRO ============
+// ============ CADASTRO (pages/cadastro.html) ============
 (function initCadastro() {
-  const form = document.getElementById("cadastroForm");
+  var form = document.getElementById("formCadastro");
   if (!form) return;
 
-  const senhaInput   = document.getElementById("cadSenha");
-  const confirmaInput = document.getElementById("cadConfirma");
-  const strengthFill  = document.getElementById("strengthFill");
-  const strengthLabel = document.getElementById("strengthLabel");
-
-  // Força da senha em tempo real
-  senhaInput?.addEventListener("input", () => {
-    const val = senhaInput.value;
-    const forca = calcularForcaSenha(val);
-
-    const cores = ["#ff6b6b", "#f7c948", "#2dd4bf", "#6c63ff"];
-    const labels = ["Muito fraca", "Fraca", "Boa", "Forte"];
-    const pct = [25, 50, 75, 100];
-
-    if (val.length === 0) {
-      strengthFill.style.width = "0%";
-      strengthLabel.textContent = "Força da senha";
-      return;
-    }
-
-    strengthFill.style.width = pct[forca] + "%";
-    strengthFill.style.background = cores[forca];
-    strengthLabel.textContent = labels[forca];
-    strengthLabel.style.color = cores[forca];
-  });
+  var senhaInput = document.getElementById("senha");
+  var forcaFill = document.getElementById("forcaFill");
+  var forcaLabel = document.getElementById("forcaLabel");
 
   function calcularForcaSenha(senha) {
-    let pontos = 0;
-    if (senha.length >= 8)  pontos++;
+    var pontos = 0;
+    if (senha.length >= 8) pontos++;
     if (senha.length >= 12) pontos++;
     if (/[A-Z]/.test(senha) && /[a-z]/.test(senha)) pontos++;
     if (/[0-9]/.test(senha)) pontos++;
@@ -189,113 +182,133 @@ initToggleSenha("toggleCadPass", "cadSenha");
     return Math.min(Math.floor(pontos / 1.5), 3);
   }
 
-  function validarCadastro() {
-    let valido = true;
+  if (senhaInput && forcaFill && forcaLabel) {
+    senhaInput.addEventListener("input", function() {
+      var val = senhaInput.value;
+      var cores = ["#ff6b6b", "#f7c948", "#2dd4bf", "#6c63ff"];
+      var labels = ["Muito fraca", "Fraca", "Boa", "Forte"];
+      var pct = [25, 50, 75, 100];
+      var forca = calcularForcaSenha(val);
 
-    const campos = [
-      { id: "cadNome",      errId: "errorCadNome",      fn: v => Validar.nome(v),  msg: "Nome deve ter ao menos 2 caracteres." },
-      { id: "cadSobrenome", errId: "errorCadSobrenome", fn: v => Validar.nome(v),  msg: "Sobrenome deve ter ao menos 2 caracteres." },
-      { id: "cadEmail",     errId: "errorCadEmail",     fn: v => Validar.email(v), msg: "E-mail inválido." },
-      { id: "cadInstituicao", errId: "errorCadInst",    fn: v => !Validar.vazio(v), msg: "Informe sua instituição." },
-      { id: "cadSenha",     errId: "errorCadSenha",     fn: v => Validar.senha(v), msg: "Senha deve ter ao menos 8 caracteres." }
+      if (val.length === 0) {
+        forcaFill.style.width = "0%";
+        forcaLabel.textContent = "Força da senha";
+        forcaLabel.style.color = "";
+        return;
+      }
+
+      forcaFill.style.width = pct[forca] + "%";
+      forcaFill.style.background = cores[forca];
+      forcaLabel.textContent = labels[forca];
+      forcaLabel.style.color = cores[forca];
+    });
+  }
+
+  function nomeOk(s) {
+    return s && s.trim().length >= 2;
+  }
+
+  function validarCadastro() {
+    var ok = true;
+    var campos = [
+      { input: "nome", erro: "errNome", vazioMsg: "Informe o nome.", fn: nomeOk, fnMsg: "Nome deve ter ao menos 2 caracteres." },
+      { input: "sobrenome", erro: "errSobrenome", vazioMsg: "Informe o sobrenome.", fn: nomeOk, fnMsg: "Sobrenome deve ter ao menos 2 caracteres." },
+      { input: "email", erro: "errEmail", vazioMsg: "Informe o e-mail.", fn: emailValido, fnMsg: "E-mail inválido." },
+      { input: "senha", erro: "errSenha", vazioMsg: "Informe a senha.", fn: senhaValida, fnMsg: "Senha deve ter ao menos 8 caracteres." }
     ];
 
-    campos.forEach(c => {
-      const input = document.getElementById(c.id);
-      limparErro(input, c.errId);
-      if (!input) return;
+    campos.forEach(function(c) {
+      var el = document.getElementById(c.input);
+      limparErro(c.erro);
+      if (el) el.classList.remove("erro-campo");
+      if (!el) return;
 
-      if (Validar.vazio(input.value)) {
-        marcarErro(input, "Campo obrigatório.", c.errId);
-        valido = false;
-      } else if (!c.fn(input.value.trim())) {
-        marcarErro(input, c.msg, c.errId);
-        valido = false;
+      if (vazio(el.value)) {
+        marcarErro(c.erro, c.vazioMsg);
+        el.classList.add("erro-campo");
+        ok = false;
+      } else if (!c.fn(el.value.trim())) {
+        marcarErro(c.erro, c.fnMsg);
+        el.classList.add("erro-campo");
+        ok = false;
       }
     });
 
-    // Confirma senha
-    const senha    = document.getElementById("cadSenha");
-    const confirma = document.getElementById("cadConfirma");
-    limparErro(confirma, "errorCadConfirma");
-    if (confirma.value !== senha.value) {
-      marcarErro(confirma, "As senhas não coincidem.", "errorCadConfirma");
-      valido = false;
+    var confirma = document.getElementById("confirma");
+    var senha = document.getElementById("senha");
+    limparErro("errConfirma");
+    if (confirma) confirma.classList.remove("erro-campo");
+    if (!confirma || vazio(confirma.value)) {
+      marcarErro("errConfirma", "Confirme a senha.");
+      if (confirma) confirma.classList.add("erro-campo");
+      ok = false;
+    } else if (senha && confirma.value !== senha.value) {
+      marcarErro("errConfirma", "As senhas não coincidem.");
+      confirma.classList.add("erro-campo");
+      ok = false;
     }
 
-    // Termos
-    const termos = document.getElementById("aceitaTermos");
-    const errTermos = document.getElementById("errorTermos");
-    if (errTermos) errTermos.textContent = "";
-    if (!termos.checked) {
-      if (errTermos) errTermos.textContent = "Você precisa aceitar os termos.";
-      valido = false;
+    limparErro("errTermos");
+    var termos = document.getElementById("termos");
+    if (termos && !termos.checked) {
+      marcarErro("errTermos", "Você precisa aceitar os termos.");
+      ok = false;
     }
 
-    return valido;
+    return ok;
   }
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", function(e) {
     e.preventDefault();
-
     if (!validarCadastro()) {
-      showToast("⚠️ Corrija os campos indicados.", "error");
+      showToast("Corrija os campos indicados.", "error");
       return;
     }
 
-    const nome      = capitalizar(document.getElementById("cadNome").value.trim());
-    const sobrenome = capitalizar(document.getElementById("cadSobrenome").value.trim());
-    const email     = document.getElementById("cadEmail").value.trim().toLowerCase();
-    const senha     = document.getElementById("cadSenha").value;
-    const inst      = document.getElementById("cadInstituicao").value.trim();
+    var nome = capitalizar(document.getElementById("nome").value.trim());
+    var sobrenome = capitalizar(document.getElementById("sobrenome").value.trim());
+    var email = document.getElementById("email").value.trim().toLowerCase();
+    var senha = document.getElementById("senha").value;
+    var nomeCompleto = nome + " " + sobrenome;
 
-    const nomeCompleto = `${nome} ${sobrenome}`;
-
-    // Verifica se e-mail já existe
-    const usuarios = JoviStorage.get("usuarios") || [];
-    if (usuarios.find(u => u.email === email)) {
-      marcarErro(document.getElementById("cadEmail"), "E-mail já cadastrado.", "errorCadEmail");
-      showToast("❌ Este e-mail já está em uso.", "error");
+    var usuarios = JoviStorage.get("usuarios") || [];
+    if (usuarios.some(function(u) { return u.email === email; })) {
+      marcarErro("errEmail", "E-mail já cadastrado.");
+      document.getElementById("email").classList.add("erro-campo");
+      showToast("Este e-mail já está em uso.", "error");
       return;
     }
 
-    // Salva novo usuário
-    const novoUsuario = {
+    if (USUARIOS_DEMO.some(function(u) { return u.email === email; })) {
+      marcarErro("errEmail", "Este e-mail é reservado para a conta demo.");
+      document.getElementById("email").classList.add("erro-campo");
+      showToast("Use outro e-mail ou entre com a conta demo.", "error");
+      return;
+    }
+
+    var novo = {
       nome: nomeCompleto,
-      email,
-      senha,
-      instituicao: inst,
-      iniciais: gerarIniciais(nomeCompleto),
+      email: email,
+      senha: senha,
       criadoEm: new Date().toISOString()
     };
-
-    usuarios.push(novoUsuario);
+    usuarios.push(novo);
     JoviStorage.set("usuarios", usuarios);
 
-    // Cria sessão
-    JoviStorage.set("sessao", {
-      nome: nomeCompleto,
-      email,
-      iniciais: gerarIniciais(nomeCompleto),
-      logado: true,
-      loginEm: new Date().toISOString()
-    });
-
-    showToast(`🎉 Conta criada! Bem-vindo ao JOVI, ${nome}!`, "success");
-    setTimeout(() => { window.location.href = "dashboard.html"; }, 1200);
+    gravarSessao(novo);
+    showToast("Conta criada! Bem-vindo ao JOVI, " + nome + "!", "success");
+    setTimeout(function() {
+      window.location.href = "dashboard.html";
+    }, 800);
   });
 
-  // Limpa erros ao digitar
-  form.querySelectorAll("input").forEach(el => {
-    el.addEventListener("input", () => el.classList.remove("error"));
+  form.querySelectorAll("input").forEach(function(el) {
+    el.addEventListener("input", function() {
+      var errMap = { nome: "errNome", sobrenome: "errSobrenome", email: "errEmail", senha: "errSenha", confirma: "errConfirma" };
+      var errId = errMap[el.id];
+      if (errId) limparErro(errId);
+      el.classList.remove("erro-campo");
+      if (el.id === "termos") limparErro("errTermos");
+    });
   });
 })();
-
-
-// ============ HELPERS ============
-function gerarIniciais(nomeCompleto) {
-  const partes = nomeCompleto.trim().split(" ");
-  const primeira = partes[0]?.charAt(0).toUpperCase() || "";
-  const ultima   = partes[partes.length - 1]?.charAt(0).toUpperCase() || "";
-  return primeira + ultima;
-}

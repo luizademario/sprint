@@ -90,9 +90,10 @@ function carregarEstado() {
 
 function salvarEstado() {
   JoviStorage.set("materias", estado.materias);
-  JoviStorage.set("fotos",    estado.fotos);
-  JoviStorage.set("notifs",   estado.notificacoes);
-  JoviStorage.set("buscas",   estado.buscas);
+  JoviStorage.set("fotos", estado.fotos);
+  JoviStorage.set("audios", estado.audios);
+  JoviStorage.set("notifs", estado.notificacoes);
+  JoviStorage.set("buscas", estado.buscas);
 }
 
 function initSessao() {
@@ -102,10 +103,10 @@ function initSessao() {
   }
 
   // Preenche avatar e mensagem de boas-vindas
-  const avatar = document.getElementById("userAvatar");
+  const avatar = document.getElementById("avatarUser");
   if (avatar) avatar.textContent = estado.sessao.iniciais || "US";
 
-  const welcomeMsg = document.getElementById("welcomeMsg");
+  const welcomeMsg = document.getElementById("msgBoasVindas");
   if (welcomeMsg) {
     const hora = new Date().getHours();
     let saudacao = "Olá";
@@ -124,35 +125,32 @@ function initSessao() {
 
 // ============ SIDEBAR ============
 function initSidebar() {
-  const toggle = document.getElementById("sidebarToggle");
+  const toggle = document.getElementById("btnMenu");
   const sidebar = document.getElementById("sidebar");
-  const navItems = document.querySelectorAll(".nav-item[data-section]");
+  const navItems = document.querySelectorAll(".nav-item[data-sec]");
 
   toggle?.addEventListener("click", () => {
-    sidebar.classList.toggle("open");
+    sidebar?.classList.toggle("open");
   });
 
-  // Fecha ao clicar fora em mobile
   document.addEventListener("click", (e) => {
-    if (window.innerWidth <= 720 &&
+    if (window.innerWidth <= 720 && sidebar && toggle &&
         !sidebar.contains(e.target) &&
         !toggle.contains(e.target)) {
       sidebar.classList.remove("open");
     }
   });
 
-  // Navegação entre seções
   navItems.forEach(item => {
     item.addEventListener("click", (e) => {
       e.preventDefault();
-      const secao = item.dataset.section;
+      const secao = item.dataset.sec;
       navegarPara(secao);
-      sidebar.classList.remove("open");
+      sidebar?.classList.remove("open");
     });
   });
 
-  // Logout
-  document.getElementById("logoutBtn")?.addEventListener("click", (e) => {
+  document.getElementById("btnSair")?.addEventListener("click", (e) => {
     e.preventDefault();
     const confirmar = confirm("Deseja realmente sair da sua conta?");
     if (confirmar) {
@@ -164,17 +162,14 @@ function initSidebar() {
 }
 
 function navegarPara(secao) {
-  // Atualiza nav items
-  document.querySelectorAll(".nav-item[data-section]").forEach(item => {
-    item.classList.toggle("active", item.dataset.section === secao);
+  document.querySelectorAll(".nav-item[data-sec]").forEach(item => {
+    item.classList.toggle("ativo", item.dataset.sec === secao);
   });
 
-  // Alterna seções
-  document.querySelectorAll(".dash-section").forEach(sec => {
-    sec.classList.toggle("active", sec.id === `sec-${secao}`);
+  document.querySelectorAll(".secao").forEach(sec => {
+    sec.classList.toggle("ativa", sec.id === `sec-${secao}`);
   });
 
-  // Renderiza conteúdo sob demanda
   if (secao === "galeria")  renderizarGaleria();
   if (secao === "audios")   renderizarAudios();
   if (secao === "materias") renderizarMaterias();
@@ -183,40 +178,28 @@ function navegarPara(secao) {
 
 // ============ TOPBAR ============
 function initTopbar() {
-  const searchInput = document.getElementById("searchInput");
-  const notifBtn = document.getElementById("notifBtn");
+  const searchInput = document.getElementById("buscaRapida");
+  const notifBtn = document.getElementById("btnNotif");
 
-  // Busca rápida na topbar
   searchInput?.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       const termo = searchInput.value.trim();
       if (termo) {
         navegarPara("busca");
-        document.getElementById("bigSearch").value = termo;
+        const campo = document.getElementById("campoBusca");
+        if (campo) campo.value = termo;
         realizarBusca(termo);
       }
     }
   });
 
-  // Abre modal de notificações
   notifBtn?.addEventListener("click", () => {
-    renderizarNotificacoes();
-    abrirModal("notifModal");
-  });
-
-  document.getElementById("closeNotifModal")?.addEventListener("click", () => fecharModal("notifModal"));
-
-  document.getElementById("clearNotif")?.addEventListener("click", () => {
-    estado.notificacoes = [];
-    salvarEstado();
-    atualizarBadgeNotif();
-    renderizarNotificacoes();
-    showToast("🗑️ Notificações limpas.", "success");
+    showToast("Central de notificações no app completo.", "success");
   });
 }
 
 function atualizarBadgeNotif() {
-  const badge = document.getElementById("notifBadge");
+  const badge = document.getElementById("badge");
   if (!badge) return;
   const count = estado.notificacoes.length;
   badge.textContent = count;
@@ -246,37 +229,27 @@ function initDashboard() {
   // Contadores animados
   setTimeout(() => {
     const totalFotos    = document.getElementById("totalFotos");
-    const totalAudios   = document.getElementById("totalAudios");
     const totalMaterias = document.getElementById("totalMaterias");
     const totalBuscas   = document.getElementById("totalBuscas");
     const pendingCount  = document.getElementById("pendingCount");
 
     if (totalFotos)    animarContador(totalFotos,    estado.fotos.length,    800);
-    if (totalAudios)   animarContador(totalAudios,   estado.audios.length,   800);
     if (totalMaterias) animarContador(totalMaterias, estado.materias.length, 800);
     if (totalBuscas)   animarContador(totalBuscas,   estado.buscas,          800);
     if (pendingCount)  pendingCount.textContent = estado.audios.filter((_, i) => i < 3).length;
   }, 300);
 
   // Botão capturar
-  document.getElementById("captureBtn")?.addEventListener("click", () => {
+  document.getElementById("btnCapturar")?.addEventListener("click", () => {
     iniciarCaptura();
   });
 
-  // Atualizar atividade
-  document.getElementById("refreshActivity")?.addEventListener("click", () => {
-    adicionarAtividade("↻ Dados atualizados pelo usuário", "🔄");
-    showToast("✅ Atividades atualizadas!", "success");
+  document.getElementById("btnAddMateria")?.addEventListener("click", () => {
+    abrirModal("modalMateria");
   });
 
-  // Botão adicionar matéria (home)
-  document.getElementById("addMateriaBtn")?.addEventListener("click", () => {
-    abrirModal("materiaModal");
-  });
-
-  // Botão adicionar matéria (seção materias)
-  document.getElementById("addMateriaBtnMain")?.addEventListener("click", () => {
-    abrirModal("materiaModal");
+  document.getElementById("btnAddMateriaMain")?.addEventListener("click", () => {
+    abrirModal("modalMateria");
   });
 }
 
@@ -289,7 +262,7 @@ function renderizarTudo() {
 
 // ============ MATÉRIAS ============
 function renderizarMateriasHome() {
-  const container = document.getElementById("materiaListHome");
+  const container = document.getElementById("materiasHome");
   if (!container) return;
 
   if (estado.materias.length === 0) {
@@ -359,25 +332,26 @@ window.excluirMateria = excluirMateria;
 
 // ============ GALERIA ============
 function renderizarGaleria() {
-  const grid     = document.getElementById("galleryGrid");
-  const filtros  = document.getElementById("galleryFilters");
-  if (!grid || !filtros) return;
+  const grid = document.getElementById("galeriaGrid");
+  const filtros = document.getElementById("filtros");
+  if (!grid) return;
 
-  // Monta filtros
-  const nomesMaterias = ["Todas", ...new Set(estado.fotos.map(f => f.materia))];
-  filtros.innerHTML = nomesMaterias.map((nome, i) => `
-    <button class="filter-btn${i === 0 ? " active" : ""}" data-filter="${nome}">${nome}</button>
+  if (filtros) {
+    const nomesMaterias = ["Todas", ...new Set(estado.fotos.map(f => f.materia))];
+    filtros.innerHTML = nomesMaterias.map((nome, i) => `
+    <button type="button" class="btn-filtro${i === 0 ? " ativo" : ""}" data-filter="${nome}">${nome}</button>
   `).join("");
 
-  filtros.querySelectorAll(".filter-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      filtros.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      const filtro = btn.dataset.filter;
-      const fotosFiltradas = filtro === "Todas" ? estado.fotos : estado.fotos.filter(f => f.materia === filtro);
-      renderizarFotos(fotosFiltradas, grid);
+    filtros.querySelectorAll(".btn-filtro").forEach(btn => {
+      btn.addEventListener("click", () => {
+        filtros.querySelectorAll(".btn-filtro").forEach(b => b.classList.remove("ativo"));
+        btn.classList.add("ativo");
+        const filtro = btn.dataset.filter;
+        const fotosFiltradas = filtro === "Todas" ? estado.fotos : estado.fotos.filter(f => f.materia === filtro);
+        renderizarFotos(fotosFiltradas, grid);
+      });
     });
-  });
+  }
 
   renderizarFotos(estado.fotos, grid);
 }
@@ -409,6 +383,11 @@ function verFoto(id) {
   alert(`📸 ${foto.emoji} ${foto.desc}\n\nMatéria: ${foto.materia}\nData: ${formatarData(foto.data)}\nHora: ${formatarHora(foto.data)}`);
 }
 window.verFoto = verFoto;
+
+function formatarHora(d) {
+  const x = d instanceof Date ? d : new Date(d);
+  return x.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+}
 
 
 // ============ ÁUDIOS ============
@@ -459,20 +438,20 @@ window.copiarTranscricao   = copiarTranscricao;
 
 // ============ BUSCA ============
 (function initBusca() {
-  const bigSearch    = document.getElementById("bigSearch");
-  const bigSearchBtn = document.getElementById("bigSearchBtn");
+  const campoBusca = document.getElementById("campoBusca");
+  const btnBuscar = document.getElementById("btnBuscar");
 
-  bigSearchBtn?.addEventListener("click", () => {
-    realizarBusca(bigSearch?.value.trim() || "");
+  btnBuscar?.addEventListener("click", () => {
+    realizarBusca(campoBusca?.value.trim() || "");
   });
 
-  bigSearch?.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") realizarBusca(bigSearch.value.trim());
+  campoBusca?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") realizarBusca(campoBusca.value.trim());
   });
 })();
 
 function realizarBusca(termo) {
-  const resultados = document.getElementById("searchResults");
+  const resultados = document.getElementById("resultadosBusca");
   if (!resultados) return;
 
   if (!termo) {
@@ -547,39 +526,31 @@ function realizarBusca(termo) {
 
 // ============ MODAIS ============
 function initModais() {
-  // Captura
-  document.getElementById("closeCaptureModal")?.addEventListener("click", () => fecharModal("captureModal"));
-  document.getElementById("cancelCapture")?.addEventListener("click", () => fecharModal("captureModal"));
-  document.getElementById("confirmCapture")?.addEventListener("click", confirmarCaptura);
+  document.getElementById("fecharCaptura")?.addEventListener("click", () => fecharModal("modalCaptura"));
+  document.getElementById("cancelarCaptura")?.addEventListener("click", () => fecharModal("modalCaptura"));
+  document.getElementById("confirmarCaptura")?.addEventListener("click", confirmarCaptura);
 
-  // Matéria
-  document.getElementById("closeMateriaModal")?.addEventListener("click", () => fecharModal("materiaModal"));
-  document.getElementById("cancelMateria")?.addEventListener("click",    () => fecharModal("materiaModal"));
-  document.getElementById("confirmMateria")?.addEventListener("click",   adicionarMateria);
+  document.getElementById("fecharMateria")?.addEventListener("click", () => fecharModal("modalMateria"));
+  document.getElementById("cancelarMateria")?.addEventListener("click", () => fecharModal("modalMateria"));
+  document.getElementById("confirmarMateria")?.addEventListener("click", adicionarMateria);
 
-  // Color picker
-  document.querySelectorAll(".color-opt").forEach(opt => {
+  document.querySelectorAll("#cores .cor").forEach(opt => {
     opt.addEventListener("click", () => {
-      document.querySelectorAll(".color-opt").forEach(o => o.classList.remove("selected"));
-      opt.classList.add("selected");
-      estado.corSelecionada = opt.dataset.color;
+      document.querySelectorAll("#cores .cor").forEach(o => o.classList.remove("selecionada"));
+      opt.classList.add("selecionada");
+      estado.corSelecionada = opt.dataset.cor;
     });
   });
 }
 
 function iniciarCaptura() {
-  abrirModal("captureModal");
-
-  // Simula detecção de IA
-  const detectEl = document.getElementById("capDetect");
-  const msgs = ["Analisando enquadramento...", "Detectando texto...", "📚 Conteúdo educacional detectado!"];
-  let i = 0;
-
-  const interval = setInterval(() => {
-    if (detectEl) detectEl.textContent = msgs[i];
-    i++;
-    if (i >= msgs.length) clearInterval(interval);
-  }, 800);
+  abrirModal("modalCaptura");
+  const sel = document.getElementById("capMateria");
+  if (sel) {
+    sel.innerHTML = estado.materias.map(m =>
+      `<option value="${m.nome}">${m.nome}</option>`
+    ).join("");
+  }
 }
 
 function confirmarCaptura() {
@@ -613,7 +584,7 @@ function confirmarCaptura() {
   animarContador(document.getElementById("totalFotos"), estado.fotos.length, 400);
   renderizarMateriasHome();
   atualizarBadgeNotif();
-  fecharModal("captureModal");
+  fecharModal("modalCaptura");
 
   showToast(`📸 Foto salva em ${materia}!`, "success");
 
@@ -622,7 +593,7 @@ function confirmarCaptura() {
 }
 
 function adicionarMateria() {
-  const nome = document.getElementById("newMateriaName")?.value.trim();
+  const nome = document.getElementById("nomeMateria")?.value.trim();
   if (!nome) {
     showToast("⚠️ Informe o nome da matéria.", "error");
     return;
@@ -647,15 +618,15 @@ function adicionarMateria() {
   renderizarMateriasHome();
   animarContador(document.getElementById("totalMaterias"), estado.materias.length, 400);
 
-  fecharModal("materiaModal");
-  if (document.getElementById("newMateriaName")) document.getElementById("newMateriaName").value = "";
+  fecharModal("modalMateria");
+  if (document.getElementById("nomeMateria")) document.getElementById("nomeMateria").value = "";
 
   showToast(`✅ Matéria "${nova.nome}" adicionada!`, "success");
   adicionarAtividade(`Nova matéria adicionada: ${nova.nome}`, "📚");
 }
 
 function adicionarAtividade(texto, icone = "📝") {
-  const lista = document.getElementById("activityList");
+  const lista = document.getElementById("listaAtividade");
   if (!lista) return;
 
   const item = document.createElement("li");
