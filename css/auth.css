@@ -2,10 +2,148 @@
    JOVI – auth.css
    ============================================ */
 
-.auth-body { min-height: 100vh; overflow: hidden; }
+.auth-body { min-height: 100vh; overflow-x: hidden; }
 
 .auth-container {
-  display: flex; min-height: 100vh;
+  display: flex;
+  min-height: 100vh;
+  align-items: stretch;
+}
+
+/* ---- Login / Cadastro (HTML: auth-esquerda · auth-direita) ---- */
+.auth-esquerda {
+  position: relative;
+  flex: 0 1 440px;
+  min-width: 0;
+  max-width: 500px;
+  padding: 2.5rem 2rem 2.5rem clamp(1.5rem, 4vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.auth-esquerda::before {
+  content: '';
+  position: absolute;
+  top: -25%;
+  left: -25%;
+  width: min(480px, 90vw);
+  height: min(480px, 90vw);
+  background: radial-gradient(circle, rgba(108, 99, 255, 0.22), transparent 68%);
+  pointer-events: none;
+}
+
+.auth-esquerda::after {
+  content: '';
+  position: absolute;
+  bottom: -18%;
+  right: -15%;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(0, 210, 255, 0.12), transparent 70%);
+  pointer-events: none;
+}
+
+.auth-esquerda > .logo,
+.auth-esquerda > h2,
+.auth-esquerda > p,
+.auth-esquerda > .info-cards,
+.auth-esquerda > .passos {
+  position: relative;
+  z-index: 1;
+}
+
+.auth-esquerda .logo { text-decoration: none; width: fit-content; }
+
+.auth-esquerda h2 {
+  font-family: var(--fonte-display);
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.auth-esquerda > p {
+  color: var(--text2);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  max-width: 26rem;
+}
+
+.info-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 26rem;
+}
+
+.info-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.8rem 1rem;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+  animation: cardSlide 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.info-card:nth-child(1) { animation-delay: 0.08s; }
+.info-card:nth-child(2) { animation-delay: 0.2s; }
+.info-card:nth-child(3) { animation-delay: 0.32s; }
+.info-card:hover { border-color: var(--accent); transform: translateX(3px); }
+.info-card > span { font-size: 1.25rem; flex-shrink: 0; }
+.info-card strong { display: block; font-size: 0.86rem; font-weight: 600; }
+.info-card small { font-size: 0.74rem; color: var(--text3); }
+
+.passos {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 26rem;
+}
+
+.passo {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  animation: cardSlide 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.passo:nth-child(1) { animation-delay: 0.08s; }
+.passo:nth-child(2) { animation-delay: 0.2s; }
+.passo:nth-child(3) { animation-delay: 0.32s; }
+
+.passo-num {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--fonte-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.passo strong { display: block; font-size: 0.88rem; margin-bottom: 2px; }
+.passo p { margin: 0; font-size: 0.8rem; color: var(--text3); line-height: 1.45; }
+
+.auth-direita {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem clamp(1.25rem, 3vw, 3rem);
+  background: var(--bg);
 }
 
 /* ---- LEFT PANEL ---- */
