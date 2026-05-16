@@ -21,49 +21,54 @@ let estado = {
   corSelecionada: "#6c63ff"
 };
 
-// Dados iniciais de demonstração
+// Dados iniciais de demonstração (FIAP Sprint — matérias do período)
 const MATERIAS_PADRAO = [
-  { id: "mat1", nome: "Matemática", cor: "#6c63ff", fotos: 12, audios: 3 },
-  { id: "mat2", nome: "Física",     cor: "#00d2ff", fotos: 8,  audios: 5 },
-  { id: "mat3", nome: "História",   cor: "#f7c948", fotos: 5,  audios: 1 },
-  { id: "mat4", nome: "Português",  cor: "#ff6b6b", fotos: 9,  audios: 2 }
+  { id: "mat1", nome: "Computational Thinking with Python",        cor: "#6c63ff", fotos: 4, audios: 2 },
+  { id: "mat2", nome: "Differentiated Problem Solving",             cor: "#00d2ff", fotos: 3, audios: 1 },
+  { id: "mat3", nome: "Edge Computing e Computer Systems",            cor: "#f7c948", fotos: 3, audios: 1 },
+  { id: "mat4", nome: "Front-end Design",                             cor: "#ff6b6b", fotos: 5, audios: 2 },
+  { id: "mat5", nome: "Storytelling e Inspiração Empreendedora",      cor: "#2dd4bf", fotos: 2, audios: 1 },
+  { id: "mat6", nome: "Web Development",                              cor: "#a78bfa", fotos: 4, audios: 2 }
 ];
 
 const FOTOS_DEMO = [
-  { id: "f1", emoji: "📐", materia: "Matemática", materiaId: "mat1", desc: "Teorema de Pitágoras", data: new Date(Date.now() - 3600000) },
-  { id: "f2", emoji: "⚡", materia: "Física",     materiaId: "mat2", desc: "Eletromagnetismo",    data: new Date(Date.now() - 7200000) },
-  { id: "f3", emoji: "📜", materia: "História",   materiaId: "mat3", desc: "Segunda Guerra",      data: new Date(Date.now() - 10800000) },
-  { id: "f4", emoji: "📝", materia: "Português",  materiaId: "mat4", desc: "Análise sintática",   data: new Date(Date.now() - 14400000) },
-  { id: "f5", emoji: "∫",  materia: "Matemática", materiaId: "mat1", desc: "Integrais",           data: new Date(Date.now() - 18000000) },
-  { id: "f6", emoji: "🔬", materia: "Física",     materiaId: "mat2", desc: "Óptica geométrica",   data: new Date(Date.now() - 21600000) }
+  { id: "f1", emoji: "🐍", materia: "Computational Thinking with Python",        materiaId: "mat1", desc: "Listas, dicionários e laços for",        data: new Date(Date.now() - 3600000) },
+  { id: "f2", emoji: "🧩", materia: "Differentiated Problem Solving",             materiaId: "mat2", desc: "Decomposição do problema – sprint",       data: new Date(Date.now() - 7200000) },
+  { id: "f3", emoji: "☁️", materia: "Edge Computing e Computer Systems",            materiaId: "mat3", desc: "Latência e nós na borda da rede",         data: new Date(Date.now() - 10800000) },
+  { id: "f4", emoji: "🎨", materia: "Front-end Design",                             materiaId: "mat4", desc: "Grid, flexbox e hierarquia visual",       data: new Date(Date.now() - 14400000) },
+  { id: "f5", emoji: "💡", materia: "Storytelling e Inspiração Empreendedora",      materiaId: "mat5", desc: "Arc da narrativa no pitch",               data: new Date(Date.now() - 18000000) },
+  { id: "f6", emoji: "🌐", materia: "Web Development",                              materiaId: "mat6", desc: "REST, status HTTP e JSON",                data: new Date(Date.now() - 21600000) }
 ];
 
 const AUDIOS_DEMO = [
   {
-    id: "a1", titulo: "Aula de Física – Eletromagnetismo",
-    materia: "Física", duracao: "45min",
+    id: "a1", titulo: "Computational Thinking with Python – funções",
+    materia: "Computational Thinking with Python", duracao: "42min",
     data: new Date(Date.now() - 86400000),
-    transcricao: "...o campo elétrico é definido como a força por unidade de carga. Vamos analisar o campo criado por uma carga pontual q no espaço. A intensidade do campo é dada por E = kq/r², onde k é a constante eletrostática e r é a distância até a carga..."
+    transcricao: "...vamos definir uma função com def que recebe parâmetros e retorna um valor. A indentação em Python é obrigatória: o bloco do corpo da função fica alinhado sob o def. Funções ajudam a reutilizar código e a dividir o programa em partes menores, mais fáceis de testar..."
   },
   {
-    id: "a2", titulo: "Aula de Matemática – Derivadas",
-    materia: "Matemática", duracao: "38min",
+    id: "a2", titulo: "Front-end Design – acessibilidade e contraste",
+    materia: "Front-end Design", duracao: "36min",
     data: new Date(Date.now() - 172800000),
-    transcricao: "...a derivada de uma função f(x) representa a taxa de variação instantânea. Para f(x) = x², temos f'(x) = 2x. Esse resultado pode ser verificado pelo limite da definição: lim(h→0) [(x+h)² - x²] / h = 2x..."
+    transcricao: "...contraste mínimo entre texto e fundo segue as diretrizes WCAG. Labels associados a inputs, ordem de foco no teclado e textos alternativos em imagens melhoram a experiência para todos os usuários. Vamos revisar um checklist rápido antes do handoff..."
   },
   {
-    id: "a3", titulo: "Aula de História – Revolução Industrial",
-    materia: "História", duracao: "52min",
+    id: "a3", titulo: "Web Development – APIs e fetch",
+    materia: "Web Development", duracao: "48min",
     data: new Date(Date.now() - 259200000),
-    transcricao: "...a Revolução Industrial iniciou-se na Inglaterra no século XVIII com a invenção da máquina a vapor por James Watt. Esse processo transformou profundamente as relações de trabalho, levando ao surgimento do proletariado urbano..."
+    transcricao: "...o método fetch retorna uma Promise. Tratamos a resposta com await ou com then. Códigos 4xx e 5xx indicam erros do cliente ou do servidor; sempre verificamos response.ok antes de chamar json(). CORS aparece quando o front e a API estão em origens diferentes..."
   }
 ];
 
 const NOTIF_DEMO = [
-  "📸 12 fotos organizadas automaticamente em Matemática",
-  "🎙️ Transcrição de Física concluída (45 min)",
-  "🔍 Busca por 'derivadas' encontrou 3 resultados"
+  "📸 Novas fotos classificadas em Computational Thinking with Python",
+  "🎙️ Transcrição concluída em Web Development (48 min)",
+  "🔍 Busca por 'fetch' encontrou 2 resultados em Web Development"
 ];
+
+/** Subir de valor quando o conjunto demo (matérias/fotos/áudios) mudar no código — assim o browser não fica preso ao localStorage antigo. */
+const DASH_DEMO_DATA_VERSION = 2;
 
 
 // ============ INICIALIZAÇÃO ============
@@ -80,12 +85,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // ============ SESSÃO ============
 function carregarEstado() {
-  estado.sessao   = JoviStorage.get("sessao");
-  estado.materias = JoviStorage.get("materias") || [...MATERIAS_PADRAO];
-  estado.fotos    = JoviStorage.get("fotos")    || [...FOTOS_DEMO];
-  estado.audios   = JoviStorage.get("audios")   || [...AUDIOS_DEMO];
+  estado.sessao = JoviStorage.get("sessao");
+
+  const versaoSalva = JoviStorage.get("dashDemoVersion");
+  if (versaoSalva !== DASH_DEMO_DATA_VERSION) {
+    estado.materias = MATERIAS_PADRAO.map(m => ({ ...m }));
+    estado.fotos = FOTOS_DEMO.map(f => ({ ...f, data: new Date(f.data) }));
+    estado.audios = AUDIOS_DEMO.map(a => ({ ...a, data: new Date(a.data) }));
+    estado.notificacoes = [...NOTIF_DEMO];
+    estado.buscas = JoviStorage.get("buscas") || 0;
+    JoviStorage.set("dashDemoVersion", DASH_DEMO_DATA_VERSION);
+    salvarEstado();
+    return;
+  }
+
+  estado.materias = JoviStorage.get("materias") || MATERIAS_PADRAO.map(m => ({ ...m }));
+  estado.fotos = JoviStorage.get("fotos") || FOTOS_DEMO.map(f => ({ ...f, data: new Date(f.data) }));
+  estado.audios = JoviStorage.get("audios") || AUDIOS_DEMO.map(a => ({ ...a, data: new Date(a.data) }));
   estado.notificacoes = JoviStorage.get("notifs") || [...NOTIF_DEMO];
-  estado.buscas   = JoviStorage.get("buscas")   || 0;
+  estado.buscas = JoviStorage.get("buscas") || 0;
 }
 
 function salvarEstado() {
